@@ -19,6 +19,7 @@ However, not all hope is lost due to some homes having their own public ip and n
 ​To bypass the ISP's limitations, I deployed a Twingate Connector. Unlike a VPN, Twingate uses an outbound-only tunnel, which doesn't require a public IP or open ports.
 
 ​# Implementation
+
 sudo apt update
 sudo apt install docker.io
 sudo systemctl enable --now docker
