@@ -1,27 +1,35 @@
 # Bypassing-CG-NAT-for-Secure-File-Access
 This is basically a self-hosted VPN on your home server for acessing files anywhere from any device without the risk of/greatly reduce risk of your private files just being blatantly sent over the internet without encryption
 
-Project Overview
+# Project Overview
 ​The goal was to create a secure, high-performance link between my mobile devices(laptops, phones etc.) and my home infrastructure (Debian Server and Windows Workstation).
 
-​The Problem: CG-NAT
+# ​The Problem: CG-NAT
 ​Most modern ISPs use Carrier-Grade NAT (CG-NAT). This meant my router did not have a public-facing IPv4 address, making traditional Port Forwarding and standard VPNs (OpenVPN/WireGuard) impossible to implement.
 However, not all hope is lost due to some homes having their own public ip and not under bulk like otheres due to the ipv4 address exhaustion
 
 ​🛠️ The Tech Stack
+
 Host: Debian (Linux)
+
 ​Containerization: Docker
+
 ​Networking/Zero-Trust: Twingate
+
 Protocols: SMB v3, SSH, SFTP
+
 ​Hardware: Windows 11 PC, Debian Server, Android (File Commander/Termius)
 
-​🏗️ Phase 1: The Gateway (Debian & Docker)
+​# Phase 1: The Gateway (Debian & Docker)
+
 ​To bypass the ISP's limitations, I deployed a Twingate Connector. Unlike a VPN, Twingate uses an outbound-only tunnel, which doesn't require a public IP or open ports.
 
 ​# Implementation
 
 sudo apt update
+
 sudo apt install docker.io
+
 sudo systemctl enable --now docker
 
 Youre gonna need docker or some sort of containerization tool to be able to manage hardware resources and once you have it installed create your connector within
@@ -30,19 +38,29 @@ Deploy Twingate Connector:
 Docker container keeps the host OS clean and ensures the connector restarts automatically if the server reboots.
 
  Note: Tokens generated from Twingate Admin Console
+ 
 docker run -d --name "twingate-connector" \
+
 --restart=always \
+
 -e TWINGATE_NETWORK="your-network-name" \
+
 -e TWINGATE_ACCESS_TOKEN="your-token" \
+
 -e TWINGATE_REFRESH_TOKEN="your-refresh-token" \
+
 twingate/connector:latest
 
 Phase 2: Integrating Windows Storage (SMB)
+
 ​The goal was to map my Windows Desktop folder (work folder) to my phone and work computer over the Twingate tunnel.
 
 ​Reasoning for Protocol Selection
+
 ​SFTP: Used for the Debian server.
+
 ​SMB v3: Selected for the Windows PC because it is the native protocol for Windows file sharing and offers better encryption/performance than v1 or v2.
+
 
 ​# Challenges & Solutions (The "Mistakes" Log)
 ​1. The Authentication Loop (Windows PIN)
