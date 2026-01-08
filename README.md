@@ -63,32 +63,54 @@ Phase 2: Integrating Windows Storage (SMB)
 
 
 ​# Challenges & Solutions (The "Mistakes" Log)
+
 ​1. The Authentication Loop (Windows PIN)
+
 ​Error: Credentials were correct, but the connection was rejected.
+
 ​Discovery: Windows "Hello" (PIN login) changes how the OS handles passwords. If a PIN is active, the standard password is often "locked" for network requests.
+
 ​Solution: Disabled the Windows PIN requirement and reverted to standard password authentication.
 
 ​2. The FireWall & Profile Trap
+
 ​Error: Connection timed out.
+
 ​Mistake: The Windows network profile was set to "Public." Windows automatically blocks Port 445 (SMB) on Public networks, even if sharing is turned on.
+
 ​Solution: Changed the Network Profile to Private and manually enabled the "File and Printer Sharing (SMB-In)" rule in Advanced Firewall.
 
+
 ​3. Admin Token Filtering (just a precaution)
+
 ​Error: "Access Denied" despite using an Admin account.
+
 ​Technical Reason: Windows restricts administrative accounts from accessing shares over a network to prevent lateral movement by attackers.
+
 ​Solution: Created a dedicated local user (sharesuser) specifically for the network share. This avoids the security overhead of a Microsoft Account or Admin Profile.
 
+
 ​🚀 Final Configuration Logic
+
 ​Twingate Client (Phone/Laptop) connects to the Twingate Cloud.
+
 ​The Docker Connector (Debian) maintains a tunnel to the same Cloud.
+
 ​The request for <IP Here> (Windows PC) is routed through the Debian Connector.
+
 ​The Windows PC accepts the SMB v3 request because it sees the connection as Private and the user as a Local Share User.
 
+
 ​🔧 Useful Commands Used
+
 ​Check Network Profile: Get-NetConnectionProfile (PowerShell)
+
 ​Check Local IP: ipconfig (Windows) / ip a (Debian)
+
 ​Test Connectivity: ping and ssh -v (to debug handshake issues)
 
+
 # Personal Notes
+
 TwinGate is relatively easy to set up although this isnt a VPN in the sense that you can change your location because that literally requires you to have a physical server there
 it achieves the basic requirements of encryption and file transfer without the limits of having speed and reliability stuck behind a paywall
