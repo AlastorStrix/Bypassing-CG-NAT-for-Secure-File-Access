@@ -9,10 +9,10 @@ Project Overview
 However, not all hope is lost due to some homes having their own public ip and not under bulk like otheres due to the ipv4 address exhaustion
 
 ​🛠️ The Tech Stack
-​Host: Debian (Linux)
+Host: Debian (Linux)
 ​Containerization: Docker
 ​Networking/Zero-Trust: Twingate
-​Protocols: SMB v3, SSH, SFTP
+Protocols: SMB v3, SSH, SFTP
 ​Hardware: Windows 11 PC, Debian Server, Android (File Commander/Termius)
 
 ​🏗️ Phase 1: The Gateway (Debian & Docker)
